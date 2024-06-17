@@ -82,6 +82,7 @@ class Item:
         self.price = price
         self.is_bought = is_bought
         self.is_using = is_using
+        self.file = file
         self.image = load_image(file, DOG_WIDTH // 1.7, DOG_HEIGHT // 1.7)
         self.full_image = load_image(file, DOG_WIDTH, DOG_HEIGHT)
 
@@ -140,7 +141,8 @@ class ClothesMenu:
             self.items[self.current_item].is_bought = True
 
     def use_item(self):
-        self.items[self.current_item].is_using = not self.items[self.current_item].is_using
+        if self.items[self.current_item].is_bought:
+            self.items[self.current_item].is_using = not self.items[self.current_item].is_using
 
     def to_next(self):
         if self.current_item != len(self.items) - 1:
@@ -289,6 +291,7 @@ class FoodMenu:
         self.previous_button.update()
         self.buy_button.update()
 
+
     def is_clicked(self, event):
         self.next_button.is_clicked(event)
         self.previous_button.is_clicked(event)
@@ -345,40 +348,35 @@ class Minigame:
         self.toys = pg.sprite.Group()
         self.score = 0
         self.start_time = pg.time.get_ticks()
-        self.interval = 1000 * 5
+        self.interval = 1000 * 30
         self.images = ['images/toys/ball.png', 'images/toys/blue bone.png', 'images/toys/red bone.png']
-        self.toylist = []
 
     def new_game(self):
         self.dog = Dog()
         self.toys = pg.sprite.Group()
         self.score = 0
         self.start_time = pg.time.get_ticks()
-        self.interval = 1000 * 5
+        self.interval = 1000 * 30
 
     def update(self):
         self.dog.update()
-        for i in self.toylist:
-            i.update()
         self.toys.update()
-        if random.randint(0, 1000) == 0:
+        if random.randint(0, 10) == 0:
             self.toys.add(Toy(random.choice(self.images)))
-        #hits = pg.sprite.spritecollide(self.dog, self.toys, True, pg.sprite.collide_rect_ratio(0.6))
-        #self.score += len(hits)
-        for toy in self.toys:
-            if toy.rect.colliderect(self.dog.rect):
-                self.score += 1
+        hits = pg.sprite.spritecollide(self.dog, self.toys, True, pg.sprite.collide_rect_ratio(0.6))
+        self.score += len(hits)
         if pg.time.get_ticks() - self.start_time > self.interval:
             self.game.happiness +=int(self.score // 2)
             self.game.mode = "Main"
+            if self.game.happiness > 100:
+                self.game.happiness = 100
 
     def draw(self, screen):
         screen.blit(self.background, (0, 0))
         screen.blit(text_render(self.score), (MENU_NAV_XPAD + 20, 80))
         self.toys.draw(screen)
         self.dog.draw(screen)
-        for i in self.toylist:
-            i.draw(screen)
+
 
 class Game:
     def __init__(self):
@@ -481,8 +479,8 @@ class Game:
                                 "name": "Синяя футболка",
                                 "price": 10,
                                 "image": "images/items/blue t-shirt.png",
-                                "is_using": True,
-                                "is_bought": True
+                                "is_using": False,
+                                "is_bought": False
                             },
                             {
                                 "name": "Ботинки",
@@ -495,6 +493,55 @@ class Game:
                                 "name": "Шляпа",
                                 "price": 50,
                                 "image": "images/items/hat.png",
+                                "is_using": False,
+                                "is_bought": False
+                            },
+                            {
+                                "name": "Бантик",
+                                "price": 15,
+                                "image": "images/items/bow.png",
+                                "is_using": False,
+                                "is_bought": False
+                            },
+                            {
+                                "name": "Кепка",
+                                "price": 20,
+                                "image": "images/items/cap.png",
+                                "is_using": False,
+                                "is_bought": False
+                            },
+                            {
+                                "name": "Золотая цепь",
+                                "price": 100,
+                                "image": "images/items/gold chain.png",
+                                "is_using": False,
+                                "is_bought": False
+                            },
+                            {
+                                "name": "Красная футболка",
+                                "price": 20,
+                                "image": "images/items/red t-shirt.png",
+                                "is_using": False,
+                                "is_bought": False
+                            },
+                            {
+                                "name": "Серебряная цепь",
+                                "price": 80,
+                                "image": "images/items/silver chain.png",
+                                "is_using": False,
+                                "is_bought": False
+                            },
+                            {
+                                "name": "Очки",
+                                "price": 25,
+                                "image": "images/items/sunglasses.png",
+                                "is_using": False,
+                                "is_bought": False
+                            },
+                            {
+                                "name": "Желтая футболка",
+                                "price": 30,
+                                "image": "images/items/yellow t-shirt.png",
                                 "is_using": False,
                                 "is_bought": False
                             }
@@ -517,8 +564,15 @@ class Game:
                         'clothes': []
                     }
 
-                with open('save.json', 'w', oncoding='utf-8') as f:
-                    json.dump(data, f, ensure_ascii=False)
+                    for item in self.clothes_menu.items:
+                        data["clothes"].append({"name": item.name,
+                                                "price": item.price,
+                                                "image": item.file,
+                                                "is_using": item.is_using,
+                                                "is_bought": item.is_bought})
+
+                with open('save.json', 'w', encoding='utf-8') as f:
+                    json.dump(data, f, ensure_ascii=False, indent=4)
 
                 pg.quit()
                 exit()
@@ -539,27 +593,22 @@ class Game:
                 else:
                     self.health -= 1
 
-            if event.type == self.FLY_TOYS:
-                chance2 = random.choice(self.mini_game.images)
-                toy = Toy(chance2)
-                self.mini_game.toylist.append(toy)
-
             if self.mode == 'Main':
                 self.eat_button.is_clicked(event)
+                self.eat_button.is_pressed = False
                 self.wear_button.is_clicked(event)
+                self.wear_button.is_pressed = False
                 self.game_button.is_clicked(event)
+                self.game_button.is_pressed = False
                 self.upgrade_button.is_clicked(event)
-            elif self.mode == 'Clothes Menu':
+            if self.mode == 'Clothes Menu':
                 self.clothes_menu.is_clicked(event)
             elif self.mode == 'Food Menu':
                 self.food_menu.is_clicked(event)
 
+
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and self.mode == 'Main':
                 self.money += self.coins_per_second
-
-            if self.mode != 'Main':
-                self.clothes_menu.is_clicked(event)
-                self.food_menu.is_clicked(event)
 
 
     def update(self):
@@ -595,7 +644,7 @@ class Game:
         self.upgrade_button.draw(self.screen)
         for item in self.clothes_menu.items:
             if item.is_using:
-                self.screen.blit(item.full_image, (SCREEN_WIDTH // 2 - DOG_WIDTH // 2, DOG_Y))
+                self.screen.blit(item.full_image, (SCREEN_WIDTH // 2 - DOG_WIDTH // 2 + 5, DOG_Y))
         if self.mode == 'Clothes Menu':
             self.clothes_menu.draw(self.screen)
         if self.mode == 'Food Menu':

@@ -1,36 +1,85 @@
 {
-  "happiness": 100,
-  "satiety": 100,
-  "health": 100,
-  "money": 0,
-  "coins_per_second": 1,
-  "costs_of_upgrade":{
-    "100": false,
-    "1000": false,
-    "5000": false,
-    "10000": false
-  },
-  "clothes": [
-                {
-                  "name": "Синяя футболка",
-                  "price": 10,
-                  "image": "images/items/blue t-shirt.png",
-                  "is_using": true,
-                  "is_bought": true
-                },
-                {
-                  "name": "Ботинки",
-                  "price": 50,
-                  "image": "images/items/boots.png",
-                  "is_using": false,
-                  "is_bought": false
-                },
-                {
-                  "name": "Шляпа",
-                  "price": 50,
-                  "image": "images/items/hat.png",
-                  "is_using": false,
-                  "is_bought": false
-                }
-              ]
+    "happiness": 44,
+    "satiety": 14,
+    "health": 75,
+    "money": 92,
+    "coins_per_second": 1,
+    "costs_of_upgrade": {
+        "100": false,
+        "1000": false,
+        "5000": false,
+        "10000": false
+    },
+    "clothes": [
+        {
+            "name": "Синяя футболка",
+            "price": 10,
+            "image": "images/items/blue t-shirt.png",
+            "is_using": false,
+            "is_bought": true
+        },
+        {
+            "name": "Ботинки",
+            "price": 50,
+            "image": "images/items/boots.png",
+            "is_using": true,
+            "is_bought": true
+        },
+        {
+            "name": "Шляпа",
+            "price": 50,
+            "image": "images/items/hat.png",
+            "is_using": false,
+            "is_bought": true
+        },
+        {
+            "name": "Бантик",
+            "price": 15,
+            "image": "images/items/bow.png",
+            "is_using": false,
+            "is_bought": true
+        },
+        {
+            "name": "Кепка",
+            "price": 20,
+            "image": "images/items/cap.png",
+            "is_using": true,
+            "is_bought": true
+        },
+        {
+            "name": "Золотая цепь",
+            "price": 100,
+            "image": "images/items/gold chain.png",
+            "is_using": true,
+            "is_bought": true
+        },
+        {
+            "name": "Красная футболка",
+            "price": 20,
+            "image": "images/items/red t-shirt.png",
+            "is_using": true,
+            "is_bought": true
+        },
+        {
+            "name": "Серебряная цепь",
+            "price": 80,
+            "image": "images/items/silver chain.png",
+            "is_using": true,
+            "is_bought": true
+        },
+        {
+            "name": "Очки",
+            "price": 25,
+            "image": "images/items/sunglasses.png",
+            "is_using": true,
+            "is_bought": true
+        },
+        {
+            "name": "Желтая футболка",
+            "price": 30,
+            "image": "images/items/yellow t-shirt.png",
+            "is_using": false,
+            "is_bought": true
+        }
+    ]
 }
